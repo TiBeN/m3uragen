@@ -1,7 +1,22 @@
 #!/usr/bin/env python3
 
 from pathlib import Path
-import sys, zipfile, os.path
+import sys
+import zipfile
+import os.path
+
+# function create m3u (output path, name, files)
+
+
+def create_m3u(outpath, name, files):
+
+    m3ufile = open(str(outpath) + '/' + name + '.m3u', 'w')
+    for i in files:
+        imgpath = os.path.relpath(i, outpath)
+        m3ufile.write(imgpath + '\n')
+
+    m3ufile.close()
+
 
 # Process arguments
 
@@ -26,7 +41,7 @@ outm3upath = Path(str(outpath) + '/m3u')
 try:
     for i in [outimgpath, outm3upath]:
         i.mkdir(parents=True)
-except FileExistsError as fer:
+except FileExistsError:
     sys.stderr.write(f'ERROR: Directory exists: {i}\n')
     sys.exit(-1)
 
@@ -34,19 +49,10 @@ except FileExistsError as fer:
 
 infiles = list(inpath.iterdir())
 
-# function create m3u (output path, name, files)
-
-def create_m3u(outpath, name, files):
-    m3ufile = open(str(outpath) + '/' + name + '.m3u', 'w')
-    for i in files:
-        imgpath = os.path.relpath(i, outpath)
-        m3ufile.write(imgpath + '\n')
-        
-    m3ufile.close()
 
 for i in infiles:
     print(f'Process {i.name}')
-    
+
     if not zipfile.is_zipfile(i):
         print(f'{i.name} is not a zip file: discard')
         continue
@@ -60,8 +66,8 @@ for i in infiles:
         zfile.extract(j, outimgpath)
         imgs.append(outimgpath / j.filename)
 
-    imgs.sort()       
-    
+    imgs.sort()
+
     if len(imgs) > 1:
         create_m3u(outm3upath, name, imgs)
 
