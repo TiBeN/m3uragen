@@ -45,8 +45,7 @@ def scan_dirs(dir, m3udir):
     for path in dir.iterdir():
         if path.is_dir():
             scan_dirs(path, m3udir)
-            process_dir(path, m3udir)
-
+    process_dir(dir, m3udir)
 
 # Process arguments
 
