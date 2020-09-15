@@ -10,34 +10,40 @@ def create_m3u(outpath, name, files):
     m3ufile = str(outpath) + '/' + name + '.m3u'
     print(f'Write: {m3ufile}')
     resource = open(m3ufile, 'w')
+    files.sort()
     for i in files:
         imgpath = os.path.relpath(i, outpath)
         resource.write(imgpath + '\n')
     resource.close()
 
 
+def remove_media_flag(img_file, pattern):
+    match = pattern.match(img_file)
+    if match:
+        media_flag = match.group(1)
+        return img_file.replace(media_flag, '')
+    # else raise..
+
+
 def process_dir(dir, m3udir):
     print(f'Process directory: {dir}')
-    imgfiles = []
-    for path in dir.iterdir():
-        if not path.is_file():
+
+    imgs_dict = dict()
+    media_flag_pattern = re.compile('.*(' + patterns[0] + ').*')
+    for item in dir.iterdir():
+        if not item.is_file():
             continue
-        imgfiles.append(str(path))
-    imgfiles.sort()
-    appimgset = []
-    cur_appname = ''
-    for imgfile in imgfiles:
-        pattern = re.compile('.*(' + patterns[0] + ').*')
-        match = pattern.match(imgfile)
-        if match:
-            multiparts_str = match.group(1)
-            img_appname = imgfile.replace(multiparts_str, '')
-            if img_appname != cur_appname and len(appimgset) > 0:
-                name = Path(cur_appname).name
-                create_m3u(m3udir, name, appimgset)
-                appimgset.clear()
-            appimgset.append(imgfile)
-            cur_appname = img_appname
+        img_file_without_media_flag = remove_media_flag(str(item), media_flag_pattern)
+        if img_file_without_media_flag not in imgs_dict:
+            imgs_dict[img_file_without_media_flag] = []
+        imgs_dict[img_file_without_media_flag].append(item)
+
+    for i, img_files in imgs_dict.items():
+        if i is None:
+            continue
+        softname = Path(Path(i).stem).name
+        print(softname)
+        create_m3u(m3udir, softname, img_files)
 
 
 def scan_dirs(dir, m3udir):
@@ -48,6 +54,7 @@ def scan_dirs(dir, m3udir):
     process_dir(dir, m3udir)
 
 # Process arguments
+
 
 if len(sys.argv) < 3:
     sys.stderr('ERROR: bad number of arguments')
