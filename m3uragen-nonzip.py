@@ -22,7 +22,8 @@ def remove_media_flag(img_file, pattern):
     if match:
         media_flag = match.group(1)
         return img_file.replace(media_flag, '')
-    # else raise..
+    else:
+        print(f'No match {img_file}')
 
 
 def process_dir(dir, m3udir):
