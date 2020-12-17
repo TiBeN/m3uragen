@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+#
+# args: <inpath> <outpath>
 
 from pathlib import Path
 import sys
@@ -48,7 +50,6 @@ except FileExistsError:
 # Iterate accross zip files in inpath
 
 infiles = list(inpath.iterdir())
-
 
 for i in infiles:
     print(f'Process {i.name}')
