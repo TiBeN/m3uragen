@@ -25,11 +25,22 @@ def _parseargs():
         'is_zipped': False,
         'scan_subdirs': True,
         'media_flag_pattern': ' - (Disk|Side) [A-Z0-9]+[^.]*',
-        'image_extensions': ['cdt'],
+        'image_extensions': ['dsk'],
+        'suffix': ' (dsk)',
         'romset_dir': Path('/home/ben/src/m3uragen/tmp/nonzipset/gamebasecpc').resolve(),
         # 'romset_dir': Path('/home/ben/src/m3uragen/tmp/zipset/recur-zip').resolve(),
-        'm3u_dir': Path('/home/ben/src/m3uragen/tmp/output/cpc/m3u')
+        'm3u_dir': Path('/home/ben/src/m3uragen/tmp/output/cpc/m3u'),
     }
+
+    #nonzipopts = {
+    #    'is_zipped': False,
+    #    'scan_subdirs': True,
+    #    'media_flag_pattern': '\\(Disk \\d+ of \\d+\\)',
+    #    'image_extensions': None,
+    #    'romset_dir': Path('/home/ben/src/m3uragen/tmp/nonzipset/new-tosec-atarist').resolve(),
+    #    # 'romset_dir': Path('/home/ben/src/m3uragen/tmp/zipset/recur-zip').resolve(),
+    #    'm3u_dir': Path('/home/ben/src/m3uragen/tmp/output/st')
+    #}
 
     return nonzipopts
     
@@ -41,7 +52,7 @@ def _main(opts):
     else:
         romset = NonZipRomSet(opts['romset_dir'], opts['scan_subdirs'], 
                               opts['media_flag_pattern'], opts['image_extensions'])
-    m3u.generate_all(romset.multi_images_softwares(), opts['m3u_dir'])
+    m3u.generate_all(romset.multi_images_softwares(), opts['m3u_dir'], opts['suffix'])
 
 
 if __name__ == '__main__':
