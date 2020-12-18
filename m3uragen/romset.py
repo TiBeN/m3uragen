@@ -5,6 +5,7 @@ RomSet classes
 import zipfile
 import os
 import re
+import logging
 from software import Software
 from image import Image
 
@@ -62,6 +63,7 @@ class ZipRomSet(RomSet):
         # files then fill the multi_image_software list
         archive = zipfile.ZipFile(path)
         archive.extractall(out_dir)
+        logging.info('Unzipped %s', path.name)
         members = archive.infolist()
         if len(members) > 1:
             software = Software(path.with_suffix('').name)

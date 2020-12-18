@@ -3,6 +3,7 @@ m3u module
 """
 
 import os
+import logging
 
 
 def generate(software, out_dir, suffix):
@@ -18,6 +19,8 @@ def generate(software, out_dir, suffix):
         m3u_fd.write((image_rel_path + '\n'))
 
     m3u_fd.close()
+    logging.info('Created M3U file for %s (%i image files)', 
+                 software.name, len(software.images()))
 
 
 def generate_all(softwares, out_dir, suffix):
