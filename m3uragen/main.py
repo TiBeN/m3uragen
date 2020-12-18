@@ -48,8 +48,8 @@ def _parseargs():
         'romset_dir': Path('/home/ben/src/m3uragen/tmp/nonzipset/new-tosec-atarist').resolve(),
         # 'romset_dir': Path('/home/ben/src/m3uragen/tmp/zipset/recur-zip').resolve(),
         'm3u_dir': Path('/home/ben/src/m3uragen/tmp/output/st'),
-        'verbose': True,
-        'dry_run': True
+        'verbose': False,
+        'dry_run': False
     }
 
     return nonzipopts
@@ -64,13 +64,20 @@ def _main(opts):
     if opts['is_zipped']:
         romset = ZipRomSet(opts['romset_dir'], opts['scan_subdirs'], 
                            opts['dry_run'])
-        romset.unzip_images_to(opts['unzip_dir'])
+        try: 
+            romset.unzip_images_to(opts['unzip_dir'])
+        except PermissionError as err:
+            logging.error('Can\'t create %s: permission denied', err.filename)
     else:
         romset = NonZipRomSet(opts['romset_dir'], opts['scan_subdirs'], 
                               opts['media_flag_pattern'], 
                               opts['image_extensions'], opts['dry_run'])
-    m3u.generate_all(romset.multi_images_softwares(), opts['m3u_dir'], 
-                     opts['suffix'], opts['dry_run'])
+
+    try: 
+        m3u.generate_all(romset.multi_images_softwares(), opts['m3u_dir'], 
+                         opts['suffix'], opts['dry_run'])
+    except PermissionError as err:
+        logging.error('Can\'t create %s: permission denied', err.filename)
 
 
 if __name__ == '__main__':

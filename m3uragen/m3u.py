@@ -18,6 +18,7 @@ def generate(software, out_dir, suffix, dry_run):
 
     for i in software.images():
         image_rel_path = os.path.relpath(i.path, out_dir)
+
         if not dry_run:
             m3u_fd.write((image_rel_path + '\n'))
 
@@ -36,4 +37,8 @@ def generate_all(softwares, out_dir, suffix, dry_run):
         if not out_dir.exists():
             out_dir.mkdir(parents=True)
     for software in softwares:
-        generate(software, out_dir, suffix, dry_run)
+        try:
+            generate(software, out_dir, suffix, dry_run)
+        except UnicodeEncodeError:
+            logging.warning("Unicode error while processing %s", 
+                            ascii(software.name))
