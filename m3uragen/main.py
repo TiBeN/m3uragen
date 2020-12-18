@@ -58,7 +58,8 @@ def _parseargs():
 def _main(opts):
 
     handler = logging.StreamHandler(sys.stdout)
-    handler.setLevel(logging.INFO)
+    handler.setLevel(logging.DEBUG)
+    handler.addFilter(lambda record: record.levelno <= logging.INFO)
     verb_handler = logging.StreamHandler(sys.stderr)
     verb_handler.setLevel(logging.WARNING)
     logging.basicConfig(format='%(levelname)s:%(message)s', 
@@ -72,6 +73,7 @@ def _main(opts):
             romset.unzip_images_to(opts['unzip_dir'])
         except PermissionError as err:
             logging.error('Can\'t create %s: permission denied', err.filename)
+            sys.exit(1)
     else:
         romset = NonZipRomSet(opts['romset_dir'], opts['scan_subdirs'], 
                               opts['media_flag_pattern'], 
@@ -82,6 +84,7 @@ def _main(opts):
                          opts['suffix'], opts['dry_run'])
     except PermissionError as err:
         logging.error('Can\'t create %s: permission denied', err.filename)
+        sys.exit(1)
 
 
 if __name__ == '__main__':
