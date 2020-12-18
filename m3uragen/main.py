@@ -58,7 +58,11 @@ def _parseargs():
 def _main(opts):
 
     handler = logging.StreamHandler(sys.stdout)
-    logging.basicConfig(format='%(levelname)s:%(message)s', handlers=[handler],
+    handler.setLevel(logging.INFO)
+    verb_handler = logging.StreamHandler(sys.stderr)
+    verb_handler.setLevel(logging.WARNING)
+    logging.basicConfig(format='%(levelname)s:%(message)s', 
+                        handlers=[handler, verb_handler],
                         level=logging.INFO if opts['verbose'] else logging.WARNING)
 
     if opts['is_zipped']:
