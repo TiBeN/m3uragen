@@ -21,7 +21,8 @@ def _parseargs():
         # 'romset_dir': Path('/home/ben/src/m3uragen/tmp/zipset/recur-zip').resolve(),
         'unzip_dir': Path('/home/ben/src/m3uragen/tmp/output/c64/img'),
         'm3u_dir': Path('/home/ben/src/m3uragen/tmp/output/c64/m3u'),
-        'verbose': True
+        'verbose': True,
+        'dry_run': False
     }
 
     # nonzipopts = {
@@ -33,7 +34,8 @@ def _parseargs():
     #     'romset_dir': Path('/home/ben/src/m3uragen/tmp/nonzipset/gamebasecpc').resolve(),
     #     # 'romset_dir': Path('/home/ben/src/m3uragen/tmp/zipset/recur-zip').resolve(),
     #     'm3u_dir': Path('/home/ben/src/m3uragen/tmp/output/cpc/m3u'),
-    #     'verbose': True
+    #     'verbose': True,
+    #     'dry_run': True
     # }
 
     # nonzipopts = {
@@ -44,7 +46,8 @@ def _parseargs():
     #    'romset_dir': Path('/home/ben/src/m3uragen/tmp/nonzipset/new-tosec-atarist').resolve(),
     #    # 'romset_dir': Path('/home/ben/src/m3uragen/tmp/zipset/recur-zip').resolve(),
     #    'm3u_dir': Path('/home/ben/src/m3uragen/tmp/output/st'),
-    #     'verbose': True
+    #     'verbose': True,
+    #     'dry_run': True
     #}
 
     return zipopts
@@ -56,12 +59,15 @@ def _main(opts):
                         level=logging.INFO if opts['verbose'] else logging.WARNING)
 
     if opts['is_zipped']:
-        romset = ZipRomSet(opts['romset_dir'], opts['scan_subdirs'])
+        romset = ZipRomSet(opts['romset_dir'], opts['scan_subdirs'], 
+                           opts['dry_run'])
         romset.unzip_images_to(opts['unzip_dir'])
     else:
         romset = NonZipRomSet(opts['romset_dir'], opts['scan_subdirs'], 
-                              opts['media_flag_pattern'], opts['image_extensions'])
-    m3u.generate_all(romset.multi_images_softwares(), opts['m3u_dir'], opts['suffix'])
+                              opts['media_flag_pattern'], 
+                              opts['image_extensions'], opts['dry_run'])
+    m3u.generate_all(romset.multi_images_softwares(), opts['m3u_dir'], 
+                     opts['suffix'], opts['dry_run'])
 
 
 if __name__ == '__main__':

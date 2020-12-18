@@ -15,9 +15,10 @@ class RomSet:
     RomSet abstract base class
     """
 
-    def __init__(self, dir, scan_subdirs):
+    def __init__(self, dir, scan_subdirs, dry_run):
         self._dir = dir
         self._scan_subdirs = scan_subdirs
+        self._dry_run = dry_run
 
     def multi_images_softwares(self):
         """
@@ -29,9 +30,9 @@ class RomSet:
 
 class ZipRomSet(RomSet):
 
-    def __init__(self, dir, scan_subdirs):
+    def __init__(self, dir, scan_subdirs, dry_run):
         self._multi_images_softwares = []
-        super().__init__(dir, scan_subdirs)
+        super().__init__(dir, scan_subdirs, dry_run)
 
     def multi_images_softwares(self):
         """
@@ -45,8 +46,9 @@ class ZipRomSet(RomSet):
         Unzip software images from zip files
         and store multi images softwares internally
         """
-        if not out_dir.exists():
-            out_dir.mkdir(parents=True)
+        if not self._dry_run:
+            if not out_dir.exists():
+                out_dir.mkdir(parents=True)
         self._scan_dir(self._dir, out_dir)
         
     def _scan_dir(self, dir, out_dir):
@@ -62,22 +64,24 @@ class ZipRomSet(RomSet):
         # self._scan_dir() helper that unzip image
         # files then fill the multi_image_software list
         archive = zipfile.ZipFile(path)
-        archive.extractall(out_dir)
+        if not self._dry_run:
+            archive.extractall(out_dir)
         logging.info('Unzipped %s', path.name)
         members = archive.infolist()
         if len(members) > 1:
             software = Software(path.with_suffix('').name)
             for i in members:
                 software.add_image(Image(os.path.join(out_dir, i.filename)))
-                self._multi_images_softwares.append(software)
+            self._multi_images_softwares.append(software)
 
 
 class NonZipRomSet(RomSet):
 
-    def __init__(self, dir, scan_subdirs, media_flag_pattern, image_extensions):
+    def __init__(self, dir, scan_subdirs, media_flag_pattern, image_extensions, 
+                 dry_run):
         self._media_flag_re = re.compile('.*(' + media_flag_pattern + ').*')
         self._image_extensions = image_extensions
-        super().__init__(dir, scan_subdirs)
+        super().__init__(dir, scan_subdirs, dry_run)
 
     def multi_images_softwares(self): 
         """
