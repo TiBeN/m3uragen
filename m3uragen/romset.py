@@ -85,14 +85,14 @@ class NonZipRomSet(RomSet):
         """
         return self._scan_dirs(self._dir).values()
 
-    def _scan_dirs(self, dir):
+    def _scan_dirs(self, dir, softwares=dict()):
         # self.multi_image_softwares() helper that handle
         # directories scanning
-        softwares = dict()
         for path in dir.iterdir():
             
             if path.is_dir() and self._scan_subdirs:
-                softwares |= self._scan_dirs(path)
+                self._scan_dirs(path, softwares)
+                continue
             
             if not self._suffix_match(path):
                 continue
@@ -106,7 +106,7 @@ class NonZipRomSet(RomSet):
             software_name = image.path.with_suffix('').name.replace(media_flag, '')
             if software_name not in softwares:
                 softwares[software_name] = Software(software_name)
-            softwares[software_name].add_image(image)    
+            softwares[software_name].add_image(image)
 
         return softwares
 
