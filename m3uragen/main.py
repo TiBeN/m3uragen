@@ -6,24 +6,25 @@ from pathlib import Path
 from romset import ZipRomSet, NonZipRomSet
 import m3u
 import logging
+import sys
 
 
 def _parseargs():
     # Handle argument parsing here 
     # Now use a raw options dict to implement logic first
 
-    zipopts = {
-        'is_zipped': True,
-        'scan_subdirs': False,
-        'suffix': None,
-        'image_extensions': None,
-        'romset_dir': Path('/home/ben/src/m3uragen/tmp/zipset/no-intro-c64').resolve(),
-        # 'romset_dir': Path('/home/ben/src/m3uragen/tmp/zipset/recur-zip').resolve(),
-        'unzip_dir': Path('/home/ben/src/m3uragen/tmp/output/c64/img'),
-        'm3u_dir': Path('/home/ben/src/m3uragen/tmp/output/c64/m3u'),
-        'verbose': True,
-        'dry_run': False
-    }
+    # zipopts = {
+    #     'is_zipped': True,
+    #     'scan_subdirs': False,
+    #     'suffix': None,
+    #     'image_extensions': None,
+    #     'romset_dir': Path('/home/ben/src/m3uragen/tmp/zipset/no-intro-c64').resolve(),
+    #     # 'romset_dir': Path('/home/ben/src/m3uragen/tmp/zipset/recur-zip').resolve(),
+    #     'unzip_dir': Path('/home/ben/src/m3uragen/tmp/output/c64/img'),
+    #     'm3u_dir': Path('/home/ben/src/m3uragen/tmp/output/c64/m3u'),
+    #     'verbose': True,
+    #     'dry_run': False
+    # }
 
     # nonzipopts = {
     #     'is_zipped': False,
@@ -38,24 +39,26 @@ def _parseargs():
     #     'dry_run': True
     # }
 
-    # nonzipopts = {
-    #    'is_zipped': False,
-    #    'scan_subdirs': True,
-    #    'media_flag_pattern': '\\(Disk \\d+ of \\d+\\)',
-    #    'image_extensions': None,
-    #    'romset_dir': Path('/home/ben/src/m3uragen/tmp/nonzipset/new-tosec-atarist').resolve(),
-    #    # 'romset_dir': Path('/home/ben/src/m3uragen/tmp/zipset/recur-zip').resolve(),
-    #    'm3u_dir': Path('/home/ben/src/m3uragen/tmp/output/st'),
-    #     'verbose': True,
-    #     'dry_run': True
-    #}
+    nonzipopts = {
+        'is_zipped': False,
+        'scan_subdirs': True,
+        'media_flag_pattern': '\\(Disk \\d+ of \\d+\\)',
+        'image_extensions': None,
+        'suffix': None,
+        'romset_dir': Path('/home/ben/src/m3uragen/tmp/nonzipset/new-tosec-atarist').resolve(),
+        # 'romset_dir': Path('/home/ben/src/m3uragen/tmp/zipset/recur-zip').resolve(),
+        'm3u_dir': Path('/home/ben/src/m3uragen/tmp/output/st'),
+        'verbose': True,
+        'dry_run': True
+    }
 
-    return zipopts
+    return nonzipopts
     
 
 def _main(opts):
 
-    logging.basicConfig(format='%(levelname)s:%(message)s', 
+    handler = logging.StreamHandler(sys.stdout)
+    logging.basicConfig(format='%(levelname)s:%(message)s', handlers=[handler],
                         level=logging.INFO if opts['verbose'] else logging.WARNING)
 
     if opts['is_zipped']:
