@@ -7,55 +7,59 @@ from romset import ZipRomSet, NonZipRomSet
 import m3u
 import logging
 import sys
+import argparse
+import re
 
 
 def _parseargs():
-    # Handle argument parsing here 
-    # Now use a raw options dict to implement logic first
 
-    # zipopts = {
-    #     'is_zipped': True,
-    #     'scan_subdirs': False,
-    #     'suffix': None,
-    #     'image_extensions': None,
-    #     'romset_dir': Path('/home/ben/src/m3uragen/tmp/zipset/no-intro-c64').resolve(),
-    #     # 'romset_dir': Path('/home/ben/src/m3uragen/tmp/zipset/recur-zip').resolve(),
-    #     'unzip_dir': Path('/home/ben/src/m3uragen/tmp/output/c64/img'),
-    #     'm3u_dir': Path('/home/ben/src/m3uragen/tmp/output/c64/m3u'),
-    #     'verbose': True,
-    #     'dry_run': False
-    # }
+    parser = argparse.ArgumentParser(description="Generate M3U files of multi-images software romsets")
+    
+    parser.add_argument('romset_dir', help='Romset directory')
+    parser.add_argument('m3u_dir', help='M3U output directory')
+    parser.add_argument('-v', '--verbose', help='increase output verbosity', 
+                        action='store_true')
+    parser.add_argument('-d', '--dry-run', 
+                        help='execute in dry mode (don\'t write anything)', 
+                        action='store_true')
+    parser.add_argument('-r', '--recursive', 
+                        help='scan romset dir recursivelly', 
+                        action='store_true')
 
-    # nonzipopts = {
-    #     'is_zipped': False,
-    #     'scan_subdirs': True,
-    #     'media_flag_pattern': ' - (Disk|Side) [A-Z0-9]+[^.]*',
-    #     'image_extensions': ['dsk'],
-    #     'suffix': ' (dsk)',
-    #     'romset_dir': Path('/home/ben/src/m3uragen/tmp/nonzipset/gamebasecpc').resolve(),
-    #     # 'romset_dir': Path('/home/ben/src/m3uragen/tmp/zipset/recur-zip').resolve(),
-    #     'm3u_dir': Path('/home/ben/src/m3uragen/tmp/output/cpc/m3u'),
-    #     'verbose': True,
-    #     'dry_run': True
-    # }
+    parser.add_argument('-s', '--suffix', 
+                        help='Add a suffix to M3U file names')
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument('-m', '--media-flag-pattern', 
+                       help='regex used to extract media flags from image file name')
+    group.add_argument('-z', '--unzip-images', 
+                       help='output directory where archives are unzipped')
 
-    nonzipopts = {
-        'is_zipped': False,
-        'scan_subdirs': True,
-        'media_flag_pattern': '\\(Disk \\d+ of \\d+\\)',
-        'image_extensions': None,
-        'suffix': None,
-        'romset_dir': Path('/home/ben/src/m3uragen/tmp/nonzipset/new-tosec-atarist').resolve(),
-        # 'romset_dir': Path('/home/ben/src/m3uragen/tmp/zipset/recur-zip').resolve(),
-        'm3u_dir': Path('/home/ben/src/m3uragen/tmp/output/st'),
-        'verbose': False,
-        'dry_run': False
-    }
+    parser.add_argument('-e', '--image-extensions', 
+                        help='filter images by extension (available only with -m)', 
+                        action='append')
+    args = parser.parse_args()
 
-    return nonzipopts
+    if not Path(args.romset_dir).resolve().is_dir():
+        logging.error('%s is not a valid directory', args.romset_dir)
+        sys.exit(1)
+
+    if args.media_flag_pattern:
+        try:
+            re.compile(args.media_flag_pattern)
+        except re.error:
+            logging.error('\'%s\' is not a valid regular expression', 
+                          args.media_flag_pattern)
+            sys.exit(1)
+
+    args.romset_dir = Path(args.romset_dir)
+    args.m3u_dir = Path(args.m3u_dir)
+    if (args.unzip_images):
+        args.unzip_images = Path(args.unzip_images)
+    
+    return args
     
 
-def _main(opts):
+def _main():
 
     handler = logging.StreamHandler(sys.stdout)
     handler.setLevel(logging.DEBUG)
@@ -63,29 +67,32 @@ def _main(opts):
     verb_handler = logging.StreamHandler(sys.stderr)
     verb_handler.setLevel(logging.WARNING)
     logging.basicConfig(format='%(levelname)s:%(message)s', 
-                        handlers=[handler, verb_handler],
-                        level=logging.INFO if opts['verbose'] else logging.WARNING)
+                        handlers=[handler, verb_handler])
 
-    if opts['is_zipped']:
-        romset = ZipRomSet(opts['romset_dir'], opts['scan_subdirs'], 
-                           opts['dry_run'])
+    args = _parseargs()
+
+    logging.getLogger().setLevel(
+            logging.INFO if args.verbose else logging.WARNING)
+
+    if args.unzip_images:
+        romset = ZipRomSet(args.romset_dir, args.recursive, args.dry_run)
         try: 
-            romset.unzip_images_to(opts['unzip_dir'])
+            romset.unzip_images_to(args.unzip_images)
         except PermissionError as err:
             logging.error('Can\'t create %s: permission denied', err.filename)
             sys.exit(1)
     else:
-        romset = NonZipRomSet(opts['romset_dir'], opts['scan_subdirs'], 
-                              opts['media_flag_pattern'], 
-                              opts['image_extensions'], opts['dry_run'])
+        romset = NonZipRomSet(args.romset_dir, args.recursive, 
+                              args.media_flag_pattern, 
+                              args.image_extensions, args.dry_run)
 
     try: 
-        m3u.generate_all(romset.multi_images_softwares(), opts['m3u_dir'], 
-                         opts['suffix'], opts['dry_run'])
+        m3u.generate_all(romset.multi_images_softwares(), args.m3u_dir, 
+                         args.suffix, args.dry_run)
     except PermissionError as err:
         logging.error('Can\'t create %s: permission denied', err.filename)
         sys.exit(1)
 
 
 if __name__ == '__main__':
-    _main(_parseargs())
+    _main()
