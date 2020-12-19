@@ -1,8 +1,8 @@
 m3uragen
 ========
 
-m3uragen generates M3U files of multi images softwares from romsets
-directories. Generated M3U files are intended to be used with RetroArch.
+m3uragen generates M3U playlists from multi images software romsets for use
+with RetroArch.
 
 Overview
 --------
@@ -11,8 +11,8 @@ The RetroArch emulators frontend supports multi images software (discs,
 floppies etc.) using [M3U playlist
 files](http://docs.retroachievements.org/Multi-Disc-Games-Tutorial/).  M3U
 files have to created manually, which can be a tedious and boring task with big
-images romsets (TOSEC, no-intro etc.). This tool scans your romset dirs and
-create theses files automatically into a dir of your choice. 
+image romsets (TOSEC, no-intro etc.). This tool scans your romset directories and
+create theses files automatically into a directory of your choice. 
 
 It supports two kinds of romsets:
 
@@ -21,21 +21,23 @@ It supports two kinds of romsets:
     In theses sets, each software has its own zip archive containing the images
     of the software. Because M3U files must contains path to unzipped images,
     m3uragen processes theses romsets in two steps: first it unzip the archives
-    into a dir of your choice, then it creates M3U files with paths pointing 
-    to the images from this dir.
+    into a directory of your choice, then it creates M3U files containing paths pointing 
+    to the unzipped images.
 
 -   Unzipped romsets
 
     In theses sets, images files are stored as is in the directory (or into
-    subdirectories). m3uragen processes theses collections by scanning the 
-    dir (optionnally recursivelly) and gathering image sets of the same software
-    then creates a M3U file for each sets having more than one image. In order to proceed, 
-    m3uragen must be provided a [regular expression](https://en.wikipedia.org/wiki/Regular_expression) 
-    which determines the "media flag" part into the image file name. 
+    subdirectories). m3uragen processes theses romsets by scanning the 
+    directory (optionnally recursively) and gathering image sets of the same software
+    then creates a M3U file for each set having more than one image. In order to proceed, 
+    m3uragen must be provided with a [regular expression](https://en.wikipedia.org/wiki/Regular_expression) 
+    which determines the "media flag" part of the image file name. 
     Common rom collections (TOSEC, no-intro) 
     use [standard naming schemes](https://www.tosecdev.org/tosec-naming-convention) to
-    name the images files, which contain among other thing "media flags" for multi images
-    softwares. For example TOSEC use something like 'Some Game **(Disk 1 of 2)**.img'.
+    name the images files, which contain "media flags" for multi images
+    softwares among other things. For example TOSEC use something like: 
+
+    'Some Game **(Disk 1 of 2)**.img'.
 
 Installation
 ------------
@@ -125,7 +127,7 @@ Paths to the images files into m3u are relatives to the M3U file.
 
 ### Handle an unzipped collection
 
-Suppose you have some Atari ST floppies images named after the TOSEC naming conventions:
+Suppose you have some Atari ST floppy images named after the TOSEC naming conventions:
 
     $ ls /st-flop
 
@@ -181,7 +183,7 @@ If the romset directory is organised into subdirs e.g.:
     ├── Beverly Hills Cop (1990)(Paramount)(Disk 2 of 2)
     │   └── Beverly Hills Cop (1990)(Paramount)(Disk 2 of 2).stx
 
-Simply tell m3uragen to scan dir recursivelly using '-r':
+Simply tell m3uragen to scan the directory recursively using '-r':
 
     $ m3uragen -v -r /st-flop /st-m3u -m '\(Disk \d+ of \d+\)'
 
