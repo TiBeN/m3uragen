@@ -125,7 +125,7 @@ M3U files are named after the name of the zip archives:
     'Zork I - The Great Underground Empire (USA, Europe) (R52) (C128).m3u'
     [..]
 
-Paths to the images files into m3u are relatives to the M3U file.
+Paths to the images files inside M3U files are relatives to the M3U files.
 
 ### Handle an unzipped collection
 
@@ -192,8 +192,8 @@ Simply tell m3uragen to scan the directory recursively using '-r':
 ### A more complex example: gamebasecpc romset
 
 This Amstrad CPC romset is more challenging as it mixes many images formats
-(cdt and dsk), presents a more complex media flag scheme and is organized into
-subdirs:
+(cdt and dsk), presents a more complex media flag naming scheme and is
+organized into subdirs:
 
     
     ├── A
@@ -224,7 +224,7 @@ subdirs:
     │   ├── Backgammon (E).cdt
         [..]
 
-Generating M3U for this collection can be handled in two passes, one per image format.
+Generating M3U files for this collection can be handled in two passes, one per image format.
 The media flag pattern is the following: ` - (Disk|Side) [A-Z0-9]+[^.]*`.
 Each pass is filtered by file extension using `-i <extension>`. In order to prevent clash
 in M3U filenames between formats, a flag containing the image format will be added at 
