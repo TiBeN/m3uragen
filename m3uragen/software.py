@@ -1,6 +1,4 @@
-"""
-Software class
-"""
+"""Software class"""
 
 
 class Software:

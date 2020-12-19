@@ -1,6 +1,4 @@
-"""
-Image class
-"""
+"""Software image class"""
 
 
 class Image:

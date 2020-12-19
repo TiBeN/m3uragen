@@ -1,16 +1,11 @@
-"""
-m3u module
-"""
+"""Handle M3U files generation"""
 
 import os
 import logging
 
 
 def generate(software, out_dir, suffix, dry_run):
-    """
-    Generate M3U file for the given software into
-    out_dir
-    """
+    """Generate M3U file for the given software into out_dir"""
     m3u_filename = software.name + (suffix if suffix else '') + '.m3u'
 
     if not dry_run:
@@ -29,10 +24,7 @@ def generate(software, out_dir, suffix, dry_run):
 
 
 def generate_all(softwares, out_dir, suffix, dry_run):
-    """
-    Generate M3U file for the list of softwares into
-    out_dir
-    """
+    """Generate M3U file for the list of softwares into out_dir"""
     if not dry_run:
         if not out_dir.exists():
             out_dir.mkdir(parents=True)

@@ -1,6 +1,4 @@
-"""
-m3uragen main entry point
-"""
+"""m3uragen main entry point"""
 
 from pathlib import Path
 from romset import ZipRomSet, NonZipRomSet
@@ -13,7 +11,8 @@ import re
 
 def _parseargs():
 
-    parser = argparse.ArgumentParser(description="Generate M3U files of multi-images software romsets")
+    parser = argparse.ArgumentParser(
+            description="Generate M3U files of multi-images software romsets")
     
     parser.add_argument('romset_dir', help='Romset directory')
     parser.add_argument('m3u_dir', help='M3U output directory')

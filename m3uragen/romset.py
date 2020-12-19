@@ -1,6 +1,4 @@
-"""
-RomSet classes
-"""
+"""RomSet classes"""
 
 import zipfile
 import os
@@ -11,9 +9,7 @@ from image import Image
 
 
 class RomSet:
-    """
-    RomSet abstract base class
-    """
+    """RomSet abstract base class"""
 
     def __init__(self, dir, scan_subdirs, dry_run):
         self._dir = dir
@@ -21,8 +17,7 @@ class RomSet:
         self._dry_run = dry_run
 
     def multi_images_softwares(self):
-        """
-        Return softwares having more than one image file.
+        """Return softwares having more than one image file.
         To be implemented on children classes
         """
         return
@@ -35,15 +30,13 @@ class ZipRomSet(RomSet):
         super().__init__(dir, scan_subdirs, dry_run)
 
     def multi_images_softwares(self):
-        """
-        Return software having more than one image file.
+        """Return software having more than one image file.
         These are detected during unzip operation
         """
         return self._multi_images_softwares
 
     def unzip_images_to(self, out_dir):
-        """
-        Unzip software images from zip files
+        """Unzip software images from zip files
         and store multi images softwares internally
         """
         if not self._dry_run:
@@ -84,8 +77,7 @@ class NonZipRomSet(RomSet):
         super().__init__(dir, scan_subdirs, dry_run)
 
     def multi_images_softwares(self): 
-        """
-        Scan files on the romset dir, combine software files using the
+        """Scan files on the romset dir, combine software files using the
         media flag pattern then return softwares having more than one 
         image file
         """
