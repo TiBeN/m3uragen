@@ -44,7 +44,9 @@ Installation
 
 ### Using pip
 
-To come...
+To install using pip type:
+
+    $ pip install m3uragen
 
 ### From the repo
 
