@@ -1,1 +1,5 @@
 m3uragen/__pycache__*
+tmp/
+build/
+dist/
+m3uragen.egg-info/
