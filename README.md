@@ -10,7 +10,7 @@ Overview
 The RetroArch emulators frontend supports multi images software (discs,
 floppies etc.) using [M3U playlist
 files](http://docs.retroachievements.org/Multi-Disc-Games-Tutorial/).  M3U
-files have to created manually, which can be a tedious and boring task with big
+files have to be created manually, which can be a tedious and boring task with big
 image romsets (TOSEC, no-intro etc.). This tool scans your romset directories and
 create theses files automatically into a directory of your choice. 
 
