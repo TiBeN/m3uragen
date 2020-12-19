@@ -1,8 +1,8 @@
 """m3uragen main entry point"""
 
 from pathlib import Path
-from romset import ZipRomSet, NonZipRomSet
-import m3u
+from m3uragen.romset import ZipRomSet, NonZipRomSet
+from m3uragen import m3u
 import logging
 import sys
 import argparse

@@ -4,8 +4,8 @@ import zipfile
 import os
 import re
 import logging
-from software import Software
-from image import Image
+from m3uragen.software import Software
+from m3uragen.image import Image
 
 
 class RomSet:
