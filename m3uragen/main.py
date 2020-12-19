@@ -58,7 +58,7 @@ def _parseargs():
     return args
     
 
-def _main():
+def main():
 
     handler = logging.StreamHandler(sys.stdout)
     handler.setLevel(logging.DEBUG)
@@ -94,4 +94,4 @@ def _main():
 
 
 if __name__ == '__main__':
-    _main()
+    main()

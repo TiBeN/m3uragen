@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="m3uragen",
-    version="1.0.2",
+    version="1.0.0",
     author="Benjamin Legendre",
     author_email="jeff58888@hotmail.com",
     description="Generate M3U playlists from multi images software romsets for use with RetroArch ",
@@ -15,7 +15,7 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     entry_points={
         'console_scripts': [
-            'm3uragen=m3uragen.main:_main'
+            'm3uragen=m3uragen.main:main'
         ]
     },
     classifiers=[
