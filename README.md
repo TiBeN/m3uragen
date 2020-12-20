@@ -57,7 +57,7 @@ Clone this repository, 'cd' into then launch using:
 Usage
 -----
 
-    $ m3uragen [-h] [-v] [-d] [-r] [-s SUFFIX] (-m MEDIA_FLAG_PATTERN | -z UNZIP_IMAGES) [-e IMAGE_EXTENSIONS] romset_dir m3u_dir
+    $ m3uragen [-h] [-v] [-d] [-r] [-s SUFFIX] (-m MEDIA_FLAG_PATTERN | -z UNZIP_IMAGES) [-e IMAGE_EXTENSIONS] [-S MOVE_SINGLE] [-M MOVE_MULTI] romset_dir m3u_dir
 
     positional arguments:
       romset_dir            Romset directory
@@ -76,6 +76,10 @@ Usage
                             output directory where archives are unzipped
       -e IMAGE_EXTENSIONS, --image-extensions IMAGE_EXTENSIONS
                             filter images by extension (available only with -m)
+      -S MOVE_SINGLE, --move-single MOVE_SINGLE
+                            move software single images to this dir
+      -M MOVE_MULTI, --move-multi MOVE_MULTI
+                            move software multi images to this dir
 
 Examples
 --------
@@ -242,3 +246,14 @@ the end of the M3U filename, using `-s <suffix>`:
     Baby Jo (E) (dsk).m3u
     [..]
  
+### Reorganize images
+
+Two options are available to move image files from the romset dir into other
+directories:
+
+-   `-S <dir>`: Move single image software files to this dir
+-   `-M <dir>`: Move multi images software files to this dir
+
+This allows to make importing images into RetroArch playlists easier by
+importing single image software files dir and m3u dir per emulated machine for
+example.
