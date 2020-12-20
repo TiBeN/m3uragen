@@ -96,21 +96,23 @@ def main():
 
     softwares = romset.get_softwares()
 
-    if args.move_single and not args.move_single.exists():
+    if not args.dry_run and args.move_single and not args.move_single.exists():
         args.move_single.mkdir(parents=True)
 
-    if args.move_multi and not args.move_multi.exists():
+    if not args.dry_run and args.move_multi and not args.move_multi.exists():
         args.move_multi.mkdir(parents=True)
 
     for i in softwares:
 
         if i.nb_images() == 1 and args.move_single:
             logging.info('Move %s to %s', i.name, args.move_single)
-            i.move_images_to(args.move_single)
+            if not args.dry_run:
+                i.move_images_to(args.move_single)
 
         if i.nb_images() > 1 and args.move_multi:
             logging.info('Move %s to %s', i.name, args.move_single)
-            i.move_images_to(args.move_multi)
+            if not args.dry_run:
+                i.move_images_to(args.move_multi)
 
     try: 
         m3u.generate_all(softwares, args.m3u_dir, 
