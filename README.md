@@ -248,7 +248,7 @@ the end of the M3U filename, using `-s <suffix>`:
  
 ### Reorganize images
 
-Two options are available to move image files from the romset dir into other
+Two options are available to move image files from the romset directory to others
 directories:
 
 -   `-S <dir>`: Move single image software files to this dir
