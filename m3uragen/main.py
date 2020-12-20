@@ -36,6 +36,11 @@ def _parseargs():
     parser.add_argument('-e', '--image-extensions', 
                         help='filter images by extension (available only with -m)', 
                         action='append')
+    parser.add_argument('-S', '--move-single',
+                        help='move software single images to this dir')
+    parser.add_argument('-M', '--move-multi',
+                        help='move software multi images to this dir')
+
     args = parser.parse_args()
 
     if not Path(args.romset_dir).resolve().is_dir():
@@ -54,6 +59,10 @@ def _parseargs():
     args.m3u_dir = Path(args.m3u_dir)
     if (args.unzip_images):
         args.unzip_images = Path(args.unzip_images)
+    if (args.move_single):
+        args.move_single = Path(args.move_single)
+    if (args.move_multi):
+        args.move_multi = Path(args.move_multi)
     
     return args
     
@@ -85,8 +94,26 @@ def main():
                               args.media_flag_pattern, 
                               args.image_extensions, args.dry_run)
 
+    softwares = romset.get_softwares()
+
+    if args.move_single and not args.move_single.exists():
+        args.move_single.mkdir(parents=True)
+
+    if args.move_multi and not args.move_multi.exists():
+        args.move_multi.mkdir(parents=True)
+
+    for i in softwares:
+
+        if i.nb_images() == 1 and args.move_single:
+            logging.info('Move %s to %s', i.name, args.move_single)
+            i.move_images_to(args.move_single)
+
+        if i.nb_images() > 1 and args.move_multi:
+            logging.info('Move %s to %s', i.name, args.move_single)
+            i.move_images_to(args.move_multi)
+
     try: 
-        m3u.generate_all(romset.multi_images_softwares(), args.m3u_dir, 
+        m3u.generate_all(softwares, args.m3u_dir, 
                          args.suffix, args.dry_run)
     except PermissionError as err:
         logging.error('Can\'t create %s: permission denied', err.filename)

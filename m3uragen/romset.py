@@ -1,5 +1,6 @@
 """RomSet classes"""
 
+from pathlib import Path
 import zipfile
 import os
 import re
@@ -16,8 +17,8 @@ class RomSet:
         self._scan_subdirs = scan_subdirs
         self._dry_run = dry_run
 
-    def multi_images_softwares(self):
-        """Return softwares having more than one image file.
+    def get_softwares(self):
+        """Return softwares.
         To be implemented on children classes
         """
         return
@@ -26,14 +27,14 @@ class RomSet:
 class ZipRomSet(RomSet):
 
     def __init__(self, dir, scan_subdirs, dry_run):
-        self._multi_images_softwares = []
+        self._softwares = []
         super().__init__(dir, scan_subdirs, dry_run)
 
-    def multi_images_softwares(self):
+    def get_softwares(self):
         """Return software having more than one image file.
         These are detected during unzip operation
         """
-        return self._multi_images_softwares
+        return self._softwares
 
     def unzip_images_to(self, out_dir):
         """Unzip software images from zip files
@@ -60,12 +61,10 @@ class ZipRomSet(RomSet):
         if not self._dry_run:
             archive.extractall(out_dir)
         logging.info('Unzipped %s', path.name)
-        members = archive.infolist()
-        if len(members) > 1:
-            software = Software(path.with_suffix('').name)
-            for i in members:
-                software.add_image(Image(os.path.join(out_dir, i.filename)))
-            self._multi_images_softwares.append(software)
+        software = Software(path.with_suffix('').name)
+        for i in archive.infolist():
+            software.add_image(Image(Path(os.path.join(out_dir, i.filename))))
+        self._softwares.append(software)
 
 
 class NonZipRomSet(RomSet):
@@ -76,10 +75,9 @@ class NonZipRomSet(RomSet):
         self._image_extensions = image_extensions
         super().__init__(dir, scan_subdirs, dry_run)
 
-    def multi_images_softwares(self): 
+    def get_softwares(self): 
         """Scan files on the romset dir, combine software files using the
-        media flag pattern then return softwares having more than one 
-        image file
+        media flag pattern then return softwares
         """
         return self._scan_dirs(self._dir).values()
 
@@ -94,14 +92,14 @@ class NonZipRomSet(RomSet):
             
             if not self._suffix_match(path):
                 continue
-            
+
             image = Image(path)
             media_flag = image.extract_media_flag(self._media_flag_re)
 
-            if not media_flag:
-                continue
+            software_name = image.path.with_suffix('').name
+            if media_flag:
+                software_name = software_name.replace(media_flag, '')
             
-            software_name = image.path.with_suffix('').name.replace(media_flag, '')
             if software_name not in softwares:
                 softwares[software_name] = Software(software_name)
             softwares[software_name].add_image(image)

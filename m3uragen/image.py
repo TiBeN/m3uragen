@@ -1,5 +1,6 @@
 """Software image class"""
 
+import os
 
 class Image:
 
@@ -10,3 +11,6 @@ class Image:
         match = media_flag_re.match(self.path.name)
         if match:
             return match.group(1)
+
+    def move_to(self, out_dir):
+        self.path = self.path.replace(os.path.join(out_dir, self.path.name))

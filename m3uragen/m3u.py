@@ -28,9 +28,10 @@ def generate_all(softwares, out_dir, suffix, dry_run):
     if not dry_run:
         if not out_dir.exists():
             out_dir.mkdir(parents=True)
-    for software in softwares:
+            
+    multi_images_softwares = (x for x in softwares if x.nb_images() > 1)
+    for i in multi_images_softwares:
         try:
-            generate(software, out_dir, suffix, dry_run)
+            generate(i, out_dir, suffix, dry_run)
         except UnicodeEncodeError:
-            logging.warning("Unicode error while processing %s", 
-                            ascii(software.name))
+            logging.warning("Unicode error while processing %s", ascii(i.name))
