@@ -34,7 +34,7 @@ class ZipRomSet(RomSet):
         """Return software having more than one image file.
         These are detected during unzip operation
         """
-        return self._softwares
+        return sorted(self._softwares, key=lambda i: i.name)
 
     def unzip_images_to(self, out_dir):
         """Unzip software images from zip files
@@ -79,7 +79,8 @@ class NonZipRomSet(RomSet):
         """Scan files on the romset dir, combine software files using the
         media flag pattern then return softwares
         """
-        return self._scan_dirs(self._dir).values()
+        softwares = self._scan_dirs(self._dir).values()
+        return sorted(softwares, key=lambda i: i.name)
 
     def _scan_dirs(self, dir, softwares=dict()):
         # self.multi_image_softwares() helper that handle
