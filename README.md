@@ -57,12 +57,14 @@ Clone this repository, 'cd' into then launch using:
 Usage
 -----
 
-    $ m3uragen [-h] [-v] [-d] [-r] [-s SUFFIX] (-m MEDIA_FLAG_PATTERN | -z UNZIP_IMAGES) [-e IMAGE_EXTENSIONS] [-S MOVE_SINGLE] [-M MOVE_MULTI] romset_dir m3u_dir
+    $ m3uragen [-h] [-v] [-d] [-r] [-s SUFFIX] (-m MEDIA_FLAG_PATTERN | -z UNZIP_IMAGES) [-e IMAGE_EXTENSIONS] [-S MOVE_SINGLE] [-M MOVE_MULTI]
+               [-f FILTER_PATTERN]
+               romset_dir m3u_dir
 
     positional arguments:
       romset_dir            Romset directory
       m3u_dir               M3U output directory
-
+    
     optional arguments:
       -h, --help            show this help message and exit
       -v, --verbose         increase output verbosity
@@ -80,6 +82,8 @@ Usage
                             move software single images to this dir
       -M MOVE_MULTI, --move-multi MOVE_MULTI
                             move software multi images to this dir
+      -f FILTER_PATTERN, --filter-pattern FILTER_PATTERN
+                            filter out images that matches this regex (available only with -m)
 
 Examples
 --------
@@ -257,3 +261,26 @@ directories:
 This allows to make importing images into RetroArch playlists easier by
 importing single image software files dir and m3u dir per emulated machine for
 example.
+
+### Filter out images files
+
+Images files can be filtered out by providing regular expression to the filter option:
+
+    -f <regex>
+
+This can be useful to exclude images flagged as `alternate` or `bad dump` in a
+TOSEC collection for example. The following pattern excludes all images flagged
+'a, b, cr, m, o, u, p, h and t):
+
+    -f '\[(a|b|cr|m|o|u|p|h|t)[0-9]{,2}( [^]]+)?\]'
+
+The -f option can be used many times in a command.
+
+### Handling TOSEC romsets
+
+The Atari ST TOSEC romset example given above is deliberately simple for
+tutorial purposes but does handle exhaustively TOSEC romsets. The following
+pattern is more complex but handle almost all cases:
+
+   -m '\((Disc|Disk|File|Part|Side|Tape) [^()]+\)(\(.+\))?(\[.+\])?' 
+
