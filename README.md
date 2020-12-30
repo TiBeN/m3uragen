@@ -282,5 +282,5 @@ The Atari ST TOSEC romset example given above is deliberately simple for
 tutorial purposes but does handle exhaustively TOSEC romsets. The following
 pattern is more complex but handle almost all cases:
 
-   -m '\((Disc|Disk|File|Part|Side|Tape) [^()]+\)(\(.+\))?(\[.+\])?' 
+    -m '\((Disc|Disk|File|Part|Side|Tape) [^()]+\)(\(.+\))?(\[.+\])?' 
 
