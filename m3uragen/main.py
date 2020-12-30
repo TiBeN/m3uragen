@@ -40,6 +40,9 @@ def _parseargs():
                         help='move software single images to this dir')
     parser.add_argument('-M', '--move-multi',
                         help='move software multi images to this dir')
+    parser.add_argument('-f', '--filter-pattern', 
+                        help='filter out images that matches this regex (available only with -m)', 
+                        action='append')
 
     args = parser.parse_args()
 
@@ -91,10 +94,20 @@ def main():
             sys.exit(1)
     else:
         romset = NonZipRomSet(args.romset_dir, args.recursive, 
-                              args.media_flag_pattern, 
+                              args.media_flag_pattern,
+                              args.filter_pattern,                              
                               args.image_extensions, args.dry_run)
 
     softwares = romset.get_softwares()
+
+    #for i in softwares:
+    #    if i.nb_images() > 1: 
+    #        print(ascii(i.name))
+    #        for j in i.images():
+    #            print(ascii(j.path.name))
+    #        print('\n')                
+
+    #sys.exit(1)
 
     if not args.dry_run and args.move_single and not args.move_single.exists():
         args.move_single.mkdir(parents=True)

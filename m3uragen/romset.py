@@ -69,10 +69,15 @@ class ZipRomSet(RomSet):
 
 class NonZipRomSet(RomSet):
 
-    def __init__(self, dir, scan_subdirs, media_flag_pattern, image_extensions, 
-                 dry_run):
-        self._media_flag_re = re.compile('.*(' + media_flag_pattern + ').*')
+    def __init__(self, dir, scan_subdirs, media_flag_pattern, filter_patterns, 
+                 image_extensions, dry_run):
+        self._media_flag_re = re.compile('.*?(' + media_flag_pattern + ').*')
         self._image_extensions = image_extensions
+        self._filter_res = []
+        if filter_patterns: 
+            for i in filter_patterns:
+                self._filter_res.append(re.compile(i))
+
         super().__init__(dir, scan_subdirs, dry_run)
 
     def get_softwares(self): 
@@ -94,6 +99,9 @@ class NonZipRomSet(RomSet):
             if not self._suffix_match(path):
                 continue
 
+            if self._filter_match(path.name):
+                continue
+
             image = Image(path)
             media_flag = image.extract_media_flag(self._media_flag_re)
 
@@ -113,3 +121,10 @@ class NonZipRomSet(RomSet):
         for i in self._image_extensions:
             if '.' + i == path.suffix:
                 return True
+
+    def _filter_match(self, name):
+        for i in self._filter_res:
+            if i.search(name):
+                return True
+        return False            
+
