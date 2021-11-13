@@ -115,7 +115,7 @@ Because the images are zipped into archives, theses archives have to be unzipped
 We want unzipped images to go to '/c64-dsk' and generated m3u files to '/c64-m3u'.
 This is done by executing:
 
-    $ m3uragen -v /c64-set /c64-m3u -z /c64-m3u
+    $ m3uragen -v /c64-set /c64-m3u -z /c64-dsk
 
 M3U files are named after the name of the zip archives:
 
