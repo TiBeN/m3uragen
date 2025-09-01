@@ -3,3 +3,5 @@ tmp/
 build/
 dist/
 m3uragen.egg-info/
+/m3uragen.iml
+/.idea/

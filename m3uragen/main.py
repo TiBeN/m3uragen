@@ -22,7 +22,7 @@ def _parseargs():
                         help='execute in dry mode (don\'t write anything)', 
                         action='store_true')
     parser.add_argument('-r', '--recursive', 
-                        help='scan romset dir recursivelly', 
+                        help='scan romset dir recursively',
                         action='store_true')
 
     parser.add_argument('-s', '--suffix', 

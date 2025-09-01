@@ -12,23 +12,23 @@ floppies etc.) using [M3U playlist
 files](http://docs.retroachievements.org/Multi-Disc-Games-Tutorial/).  M3U
 files have to be created manually, which can be a tedious and boring task with big
 image romsets (TOSEC, no-intro etc.). This tool scans your romset directories and
-create theses files automatically into a directory of your choice. 
+create these files automatically into a directory of your choice. 
 
 It supports two kinds of romsets:
 
 -   Zipped romsets
 
-    In theses sets, each software has its own zip archive containing the images
-    of the software. Because M3U files must contains path to unzipped images,
+    In these sets, each software has its own zip archive containing the images
+    of the software. Because M3U files must contain path to unzipped images,
     m3uragen processes theses romsets in two steps: first it unzip the archives
     into a directory of your choice, then it creates M3U files containing paths pointing 
     to the unzipped images.
 
 -   Unzipped romsets
 
-    In theses sets, images files are stored as is in the directory (or into
+    In these sets, images files are stored as is in the directory (or into
     subdirectories). m3uragen processes theses romsets by scanning the 
-    directory (optionnally recursively) and gathering image sets of the same software
+    directory (optionally recursively) and gathering image sets of the same software
     then creates a M3U file for each set having more than one image. In order to proceed, 
     m3uragen must be provided with a [regular expression](https://en.wikipedia.org/wiki/Regular_expression) 
     which determines the "media flag" part of the image file name. 
@@ -111,7 +111,7 @@ The romset is organised like this into the dir '/c64-set'
     'Zyron (Europe).zip'
     [..]
 
-Because the images are zipped into archives, theses archives have to be unzipped before.
+Because the images are zipped into archives, these archives have to be unzipped before.
 We want unzipped images to go to '/c64-dsk' and generated m3u files to '/c64-m3u'.
 This is done by executing:
 
@@ -176,7 +176,7 @@ combining verbose mode and dry run mode:
 
 This will output M3U files that would be generated without really create them.
 
-If the romset directory is organised into subdirs e.g.:
+If the romset directory is organised into subdirectories e.g.:
 
     ├── Berlin 1948 (1989)(Time Warp)(Disk 1 of 2)
     │   └── Berlin 1948 (1989)(Time Warp)(Disk 1 of 2).stx
@@ -201,7 +201,7 @@ Simply tell m3uragen to scan the directory recursively using '-r':
 
 This Amstrad CPC romset is more challenging as it mixes many images formats
 (cdt and dsk), presents a more complex media flag naming scheme and is
-organized into subdirs:
+organized into subdirectories:
 
     
     ├── A
@@ -270,7 +270,7 @@ Images files can be filtered out by providing regular expression to the filter o
 
 This can be useful to exclude images flagged as `alternate` or `bad dump` in a
 TOSEC collection for example. The following pattern excludes all images flagged
-'a, b, cr, m, o, u, p, h and t):
+`a, b, cr, m, o, u, p, h` and `t`:
 
     -f '\[(a|b|cr|m|o|u|p|h|t)[0-9]{,2}( [^]]+)?\]'
 
